@@ -1,3 +1,5 @@
+import pytest
+
 import server
 from tests.conftest import mock_clubs, mock_competitions, decoded_response
 
@@ -102,3 +104,20 @@ def test_booking_past_competition(client, mocker, mock_clubs, mock_competitions,
 
     assert response.status_code == 400
     assert "You can't book a past competition" in decoded_response(response)
+
+@pytest.mark.parametrize("invalid_places", ["0", "-1", "-134"])
+def test_booking_invalid_number_of_places(client, mocker, mock_clubs, mock_competitions, decoded_response, invalid_places):
+    mocker.patch.object(server, "clubs", mock_clubs)
+    mocker.patch.object(server, "competitions", mock_competitions)
+
+    response = client.post(
+        "/purchasePlaces",
+        data={
+            "club": "Simply Lift",
+            "competition": "Spring Festival",
+            "places": invalid_places
+        }
+    )
+
+    assert response.status_code == 400
+    assert "Number of places must be greater than zero" in decoded_response(response)

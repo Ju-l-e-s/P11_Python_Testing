@@ -61,6 +61,10 @@ def purchasePlaces():
     club_points = int(club['points'])
     competition_date = datetime.strptime(competition["date"], "%Y-%m-%d %H:%M:%S")
 
+    if placesRequired <= 0:
+        flash("Number of places must be greater than zero")
+        return render_template('booking.html', club=club, competition=competition), 400
+
     if competition_date < datetime.now():
         flash("You can't book a past competition")
         return render_template('booking.html', club=club, competition=competition),400
