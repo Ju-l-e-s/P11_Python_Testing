@@ -75,3 +75,30 @@ def test_booking_maximum_12_places(client, mocker, mock_clubs, mock_competitions
 
     updated_club = next(c for c in mock_clubs if c["name"] == "Simply Lift")
     assert updated_club["points"] == "1"  # 13 - 12 = 1
+
+
+
+def test_booking_past_competition(client, mocker, mock_clubs, mock_competitions, decoded_response):
+    mocker.patch.object(server, "clubs", mock_clubs)
+
+    # Mock a past competition (date < now)
+    past_competitions = [
+        {
+            "name": "Old Classic",
+            "date": "2000-01-01 10:00:00",
+            "numberOfPlaces": "20"
+        }
+    ]
+    mocker.patch.object(server, "competitions", past_competitions)
+
+    response = client.post(
+        "/purchasePlaces",
+        data={
+            "club": "Simply Lift",
+            "competition": "Old Classic",
+            "places": "2"
+        }
+    )
+
+    assert response.status_code == 400
+    assert "You can't book a past competition" in decoded_response(response)

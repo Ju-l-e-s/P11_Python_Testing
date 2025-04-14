@@ -1,4 +1,6 @@
+import server
 from tests.conftest import client, mock_clubs, mock_competitions
+from datetime import datetime, timedelta
 
 def test_show_summary_valid_email(client, mocker, mock_clubs, mock_competitions):
     # Mock
@@ -21,3 +23,28 @@ def test_show_summary_invalid_email(client, mocker, mock_clubs):
 
     assert response.status_code == 401
     assert b"Invalid email" in response.data
+
+def test_past_competition_not_displayed_for_booking(client, mocker, mock_clubs,decoded_response):
+
+    mocker.patch.object(server, "clubs", mock_clubs)
+
+    competitions = [
+        {
+            "name": "Old Competition",
+            "date": (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d %H:%M:%S"),
+            "numberOfPlaces": "10"
+        },
+        {
+            "name": "Future Competition",
+            "date": (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d %H:%M:%S"),
+            "numberOfPlaces": "10"
+        }
+    ]
+
+    mocker.patch.object(server, "competitions", competitions)
+
+    response = client.post("/showSummary", data={"email": "john@simplylift.co"})
+    print(decoded_response(response))
+    assert "Old Competition" in decoded_response(response)
+    assert "Book Places" in decoded_response(response)  # only for Future Competition
+    assert decoded_response(response).count("Book Places") == 1

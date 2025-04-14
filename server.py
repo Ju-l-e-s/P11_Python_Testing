@@ -1,4 +1,6 @@
 import json
+from datetime import datetime
+
 from flask import Flask,render_template,request,redirect,flash,url_for
 
 
@@ -19,6 +21,7 @@ app.secret_key = 'something_special'
 
 competitions = loadCompetitions()
 clubs = loadClubs()
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -29,6 +32,11 @@ def showSummary():
     if found_club:
         club = found_club[0]
         flash('You were successfully logged in')
+
+        for comp in competitions:
+            date_obj = datetime.strptime(comp['date'], "%Y-%m-%d %H:%M:%S")
+            comp['is_past'] = date_obj < datetime.now()
+
         return render_template('welcome.html', club=club, competitions=competitions)
     else:
         flash('Invalid email')
@@ -51,6 +59,11 @@ def purchasePlaces():
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     placesRequired = int(request.form['places'])
     club_points = int(club['points'])
+    competition_date = datetime.strptime(competition["date"], "%Y-%m-%d %H:%M:%S")
+
+    if competition_date < datetime.now():
+        flash("You can't book a past competition")
+        return render_template('booking.html', club=club, competition=competition),400
 
     if placesRequired > club_points:
         flash("You don't have enough points")
