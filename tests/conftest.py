@@ -1,6 +1,6 @@
 import pytest
 from server import app
-
+import html
 @pytest.fixture
 def client():
     app.config['TESTING'] = True
@@ -25,6 +25,11 @@ def mock_clubs():
             "name": "She Lifts",
             "email": "kate@shelifts.co.uk",
             "points": "12"
+        },
+        {
+            "name": "test",
+            "email": "valid@gmail.fr",
+            "points": "12"
         }
     ]
 
@@ -42,3 +47,9 @@ def mock_competitions():
             "numberOfPlaces": "13"
         }
     ]
+
+@pytest.fixture
+def decoded_response():
+    def decode(response):
+       return html.unescape(response.data.decode("utf-8"))
+    return decode

@@ -5,6 +5,7 @@
     <title>Booking for {{competition['name']}} || GUDLFT</title>
 </head>
 <body>
+    {% include '_flash_messages.html' %}
     <h2>{{competition['name']}}</h2>
     Places available: {{competition['numberOfPlaces']}}
     <form action="/purchasePlaces" method="post">
