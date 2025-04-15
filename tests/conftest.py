@@ -48,8 +48,5 @@ def mock_competitions():
         }
     ]
 
-@pytest.fixture
-def decoded_response():
-    def decode(response):
+def decoded_response(response):
        return html.unescape(response.data.decode("utf-8"))
-    return decode

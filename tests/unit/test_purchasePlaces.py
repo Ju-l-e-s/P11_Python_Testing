@@ -3,7 +3,7 @@ import pytest
 import server
 from tests.conftest import mock_clubs, mock_competitions, decoded_response
 
-def test_booking_more_than_available_points(client, mocker, mock_clubs, mock_competitions,decoded_response):
+def test_booking_more_than_available_points(client, mocker, mock_clubs, mock_competitions):
     # mocks
     mocker.patch.object(server, "clubs", mock_clubs)
     mocker.patch.object(server, "competitions", mock_competitions)
@@ -21,7 +21,7 @@ def test_booking_more_than_available_points(client, mocker, mock_clubs, mock_com
     assert response.status_code == 400
     assert "You don't have enough points" in decoded_response(response)
 
-def test_booking_less_than_available_points(client, mocker, mock_clubs, mock_competitions, decoded_response):
+def test_booking_less_than_available_points(client, mocker, mock_clubs, mock_competitions):
     # mocks
     mocker.patch.object(server, "clubs", mock_clubs)
     mocker.patch.object(server, "competitions", mock_competitions)
@@ -43,7 +43,7 @@ def test_booking_less_than_available_points(client, mocker, mock_clubs, mock_com
     updated_club = next(c for c in mock_clubs if c["name"] == "Iron Temple")
     assert updated_club["points"] == "1"
 
-def test_booking_more_than_12_places(client, mocker, mock_clubs, mock_competitions,decoded_response):
+def test_booking_more_than_12_places(client, mocker, mock_clubs, mock_competitions):
     mocker.patch.object(server, "clubs", mock_clubs)
     mocker.patch.object(server, "competitions", mock_competitions)
 
@@ -59,7 +59,7 @@ def test_booking_more_than_12_places(client, mocker, mock_clubs, mock_competitio
     assert response.status_code == 400
     assert "You can't book more than 12 places" in decoded_response(response)
 
-def test_booking_maximum_12_places(client, mocker, mock_clubs, mock_competitions, decoded_response):
+def test_booking_maximum_12_places(client, mocker, mock_clubs, mock_competitions):
     mocker.patch.object(server, "clubs", mock_clubs)
     mocker.patch.object(server, "competitions", mock_competitions)
 
@@ -80,7 +80,7 @@ def test_booking_maximum_12_places(client, mocker, mock_clubs, mock_competitions
 
 
 
-def test_booking_past_competition(client, mocker, mock_clubs, mock_competitions, decoded_response):
+def test_booking_past_competition(client, mocker, mock_clubs, mock_competitions):
     mocker.patch.object(server, "clubs", mock_clubs)
 
     # Mock a past competition (date < now)
@@ -106,7 +106,7 @@ def test_booking_past_competition(client, mocker, mock_clubs, mock_competitions,
     assert "You can't book a past competition" in decoded_response(response)
 
 @pytest.mark.parametrize("invalid_places", ["0", "-1", "-134"])
-def test_booking_invalid_number_of_places(client, mocker, mock_clubs, mock_competitions, decoded_response, invalid_places):
+def test_booking_invalid_number_of_places(client, mocker, mock_clubs, mock_competitions, invalid_places):
     mocker.patch.object(server, "clubs", mock_clubs)
     mocker.patch.object(server, "competitions", mock_competitions)
 

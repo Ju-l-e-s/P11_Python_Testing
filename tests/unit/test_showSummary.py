@@ -1,5 +1,5 @@
 import server
-from tests.conftest import client, mock_clubs, mock_competitions
+from tests.conftest import client, mock_clubs, mock_competitions, decoded_response
 from datetime import datetime, timedelta
 
 def test_show_summary_valid_email(client, mocker, mock_clubs, mock_competitions):
@@ -24,7 +24,7 @@ def test_show_summary_invalid_email(client, mocker, mock_clubs):
     assert response.status_code == 401
     assert b"Invalid email" in response.data
 
-def test_past_competition_not_displayed_for_booking(client, mocker, mock_clubs,decoded_response):
+def test_past_competition_not_displayed_for_booking(client, mocker, mock_clubs):
 
     mocker.patch.object(server, "clubs", mock_clubs)
 

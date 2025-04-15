@@ -1,6 +1,8 @@
 import server
+from tests.conftest import decoded_response
 
-def test_points_board_accessible(client, mocker, mock_clubs,decoded_response):
+
+def test_points_board_accessible(client, mocker, mock_clubs):
     mocker.patch.object(server, "clubs", mock_clubs)
 
     response = client.get("/points")
