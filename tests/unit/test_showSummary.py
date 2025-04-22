@@ -21,7 +21,7 @@ def test_show_summary_invalid_email(client, mocker, mock_clubs):
     # POST request to /showSummary with an invalid email
     response = client.post('/showSummary', data={"email": "invalid@email.com"})
 
-    assert response.status_code == 401
+    assert response.status_code == 200
     assert b"Invalid email" in response.data
 
 def test_past_competition_not_displayed_for_booking(client, mocker, mock_clubs):

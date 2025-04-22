@@ -18,7 +18,7 @@ def test_booking_more_than_available_points(client, mocker, mock_clubs, mock_com
         }
     )
 
-    assert response.status_code == 400
+    assert response.status_code == 200
     assert "You don't have enough points" in decoded_response(response)
 
 def test_booking_less_than_available_points(client, mocker, mock_clubs, mock_competitions):
@@ -56,7 +56,7 @@ def test_booking_more_than_12_places(client, mocker, mock_clubs, mock_competitio
         }
     )
 
-    assert response.status_code == 400
+    assert response.status_code == 200
     assert "You can't book more than 12 places" in decoded_response(response)
 
 def test_booking_maximum_12_places(client, mocker, mock_clubs, mock_competitions):
@@ -102,7 +102,7 @@ def test_booking_past_competition(client, mocker, mock_clubs, mock_competitions)
         }
     )
 
-    assert response.status_code == 400
+    assert response.status_code == 200
     assert "You can't book a past competition" in decoded_response(response)
 
 @pytest.mark.parametrize("invalid_places", ["0", "-1", "-134"])
@@ -119,5 +119,5 @@ def test_booking_invalid_number_of_places(client, mocker, mock_clubs, mock_compe
         }
     )
 
-    assert response.status_code == 400
+    assert response.status_code == 200
     assert "Number of places must be greater than zero" in decoded_response(response)

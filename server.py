@@ -40,7 +40,7 @@ def showSummary():
         return render_template('welcome.html', club=club, competitions=competitions)
     else:
         flash('Invalid email')
-        return render_template('index.html'), 401
+        return render_template('index.html')
 
 @app.route('/book/<competition>/<club>')
 def book(competition,club):
@@ -63,19 +63,19 @@ def purchasePlaces():
 
     if placesRequired <= 0:
         flash("Number of places must be greater than zero")
-        return render_template('booking.html', club=club, competition=competition), 400
+        return render_template('booking.html', club=club, competition=competition)
 
     if competition_date < datetime.now():
         flash("You can't book a past competition")
-        return render_template('booking.html', club=club, competition=competition),400
+        return render_template('booking.html', club=club, competition=competition)
 
     if placesRequired > club_points:
         flash("You don't have enough points")
-        return render_template('booking.html', club=club, competition=competition),400
+        return render_template('booking.html', club=club, competition=competition)
 
     if placesRequired > 12:
         flash("You can't book more than 12 places")
-        return render_template('booking.html', club=club, competition=competition),400
+        return render_template('booking.html', club=club, competition=competition)
 
     competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
     club['points'] = str(club_points - placesRequired)
